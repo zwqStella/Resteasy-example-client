@@ -1,4 +1,4 @@
-package main;
+package com.restfully.client;
 
 public class Animal {
    private String name;

@@ -1,9 +1,11 @@
-package main;
+package com.restfully.client;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -16,10 +18,10 @@ public class Main {
 	private static Scanner input;
 	
 	public static void main(String args[]) {
-		boolean run = true;
 		client = ClientBuilder.newClient();
 		input = new Scanner(System.in);
-		while(run) {
+		while(true) {
+			System.out.println();
 			System.out.println("Menu: ");
 			System.out.println("--------------------------------");
 			System.out.println("0. Say Hello");
@@ -28,25 +30,31 @@ public class Main {
 			System.out.println("3. Delete Animal");
 			System.out.println("4. Modify Animal name");
 			System.out.println("Enter any other key to quit...");
-			int choice = input.nextInt();
-			switch(choice) {
-			case 0:
-				hello();
-				break;
-			case 1:
-				post();
-				break;
-			case 2:
-				get();
-				break;
-			case 3:
-				delete();
-				break;
-			case 4:
-				put();
-				break;
-			default:
-				run = false;
+			try {
+				int choice = input.nextInt();
+				switch(choice) {
+				case 0:
+					hello();
+					break;
+				case 1:
+					post();
+					break;
+				case 2:
+					get();
+					break;
+				case 3:
+					delete();
+					break;
+				case 4:
+					put();
+					break;
+				default:
+					System.out.println("Quit... ");
+					return;
+				}
+			}catch(InputMismatchException e) {
+				System.out.println("Quit... ");
+				return;
 			}
 		}
 	}
@@ -78,17 +86,26 @@ public class Main {
 			return;
 		}
 		WebTarget target = client.target("http://localhost:8080/zoo/animals/{id}");
-		Animal response = target.resolveTemplate("id", id).request().get(Animal.class);
-		System.out.println("Query Result");
-		System.out.println(response);
+		Animal response;
+		try {
+			response = target.resolveTemplate("id", id).request().get(Animal.class);
+			System.out.println("Query Result");
+			System.out.println(response);
+		} catch (NotFoundException e) {
+			System.out.println("Animal not found");
+		}
 	}
 	public static void delete() {
 		System.out.println("Please enter the id of the animal you want to delete: ");
 		int id = input.nextInt();
 		WebTarget target = client.target("http://localhost:8080/zoo/animals/delete");
-		Animal response = target.queryParam("id", id).request().delete(Animal.class);
-		System.out.println("Delete Sucessfully.");
-		System.out.println(response);
+		try {
+			Animal response = target.queryParam("id", id).request().delete(Animal.class);
+			System.out.println("Delete Sucessfully.");
+			System.out.println(response);
+		} catch (NotFoundException e) {
+			System.out.println("Animal not found");
+		}
 	}
 	public static void put() {
 		System.out.println("Please enter the id of the animal you want to rename: ");
@@ -96,9 +113,13 @@ public class Main {
 		System.out.println("Please enter the new name: ");
 		String name = input.next();
 		WebTarget target = client.target("http://localhost:8080/zoo/animals/edit");
-		Animal response = target.matrixParam("id", id).matrixParam("name", name).request().put(null, Animal.class);
-		System.out.println("Modify Sucessfully.");
-		System.out.println(response);
+		try {
+			Animal response = target.matrixParam("id", id).matrixParam("name", name).request().put(null, Animal.class);
+			System.out.println("Modify Sucessfully.");
+			System.out.println(response);
+		} catch (NotFoundException e) {
+			System.out.println("Animal not found");
+		}
 	}
+	
 }
-
