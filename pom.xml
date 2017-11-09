@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
    <modelVersion>4.0.0</modelVersion>
-   
    <groupId>org.jboss.resteasy.example</groupId>
    <artifactId>jaxrs-2.0-example-client</artifactId>
    <version>1.0</version>
    <packaging>jar</packaging>
    <name>client</name>
-   <description /> 
-    
+   <description />
    <dependencies>
       <dependency>
          <groupId>org.jboss.resteasy</groupId>
@@ -22,9 +19,22 @@
          <version>2.3.2.Final</version>
       </dependency>
    </dependencies>
-   
    <build>
-		<finalName>client</finalName>		
+      <finalName>client</finalName>
+      <plugins>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <configuration>
+               <executable>java</executable>
+               <arguments>
+                  <argument>-classpath</argument>
+                  <classpath />
+                  <argument>com.restfully.client.Main</argument>
+               </arguments>
+            </configuration>
+         </plugin>
+      </plugins>
    </build>
-
 </project>
