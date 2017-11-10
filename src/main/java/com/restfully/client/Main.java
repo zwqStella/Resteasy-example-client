@@ -69,7 +69,7 @@ public class Main {
 		System.out.println("Please enter animal kind: ");
 		String kind = input.next();
 		Animal animal = new Animal(name, kind);
-		WebTarget target = client.target("http://localhost:8080/zoo/animals/add");
+		WebTarget target = client.target("http://localhost:8080/zoo/animals");
 		Animal response = target.request().post(Entity.entity(animal, MediaType.APPLICATION_JSON),Animal.class);
 		System.out.println("Add Sucessfully.");
 		System.out.println(response);
@@ -98,7 +98,7 @@ public class Main {
 	public static void delete() {
 		System.out.println("Please enter the id of the animal you want to delete: ");
 		int id = input.nextInt();
-		WebTarget target = client.target("http://localhost:8080/zoo/animals/delete");
+		WebTarget target = client.target("http://localhost:8080/zoo/animals");
 		try {
 			Animal response = target.queryParam("id", id).request().delete(Animal.class);
 			System.out.println("Delete Sucessfully.");
@@ -112,7 +112,7 @@ public class Main {
 		int id = input.nextInt();
 		System.out.println("Please enter the new name: ");
 		String name = input.next();
-		WebTarget target = client.target("http://localhost:8080/zoo/animals/edit");
+		WebTarget target = client.target("http://localhost:8080/zoo/animals");
 		try {
 			Animal response = target.matrixParam("id", id).matrixParam("name", name).request().put(null, Animal.class);
 			System.out.println("Modify Sucessfully.");
